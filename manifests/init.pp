@@ -20,7 +20,7 @@ class profile_nextcloud (
   $proxy_trusted_proxies    = undef,
   $proxy_overwritehost      = undef,
   $proxy_overwriteprotocol  = undef,
-  ) {
+  $install_method           = 'filesystem') {
 
   if ($manage_repos) {
     class { '::profile_nextcloud::repos':
@@ -231,7 +231,8 @@ class profile_nextcloud (
     data_dir           => $data_dir,
     database_host      => $database_host,
     redirect_ssl       => false,
-    trusted_domains    => []
+    trusted_domains    => [],
+    install_method     => $install_method,
   }->
   class { 'nextcloud::configure_ldap':
     ldap_password        => $ldap_password,
