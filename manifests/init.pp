@@ -21,7 +21,13 @@ class profile_nextcloud (
   $proxy_trusted_proxies    = undef,
   $proxy_overwritehost      = undef,
   $proxy_overwriteprotocol  = undef,
-  $install_method           = 'filesystem') {
+  $install_method           = 'filesystem',
+  $php_max_execution_time   = 3600,
+  $php_max_input_time       = 3600,
+  $php_memory_limit         = '128M',
+  $php_post_max_size        = '16G',
+  $php_upload_max_filseize  = '16G',
+  $php_timezone) {
 
   if ($manage_repos) {
     class { '::profile_nextcloud::repos':
@@ -178,7 +184,15 @@ class profile_nextcloud (
         },
         'zend'     => true
       },
-    }
+    },
+    settings   => {
+      'PHP/max_execution_time'  => $php_max_execution_time,
+      'PHP/max_input_time'      => $php_max_input_time,
+      'PHP/memory_limit'        => $php_memory_limit,
+      'PHP/post_max_size'       => $php_post_max_size,
+      'PHP/upload_max_filesize' => $php_upload_max_filseize,
+      'Date/date.timezone'      => $php_timezone,
+    },
   } ->
   class { 'apache::mod::php':
     package_name => 'php', # mod_php from remi
