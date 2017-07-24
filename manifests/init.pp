@@ -8,6 +8,7 @@ class profile_nextcloud (
   $admin_username           = undef,
   $admin_pass               = undef,
   $data_dir                 = '/srv/nextcloud-data',
+  $create_data_dir          = true,
   $database_root_pass       = undef,
   $external_db_host         = undef,
   $ldap_password            = undef,
@@ -233,6 +234,7 @@ class profile_nextcloud (
     redirect_ssl       => false,
     trusted_domains    => [],
     install_method     => $install_method,
+    create_data_dir    => $create_data_dir,
   }->
   class { 'nextcloud::configure_ldap':
     ldap_password        => $ldap_password,
