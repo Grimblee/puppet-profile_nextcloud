@@ -266,11 +266,13 @@ class profile_nextcloud (
     require              => Class['nextcloud'],
   }
 
-  class { 'nextcloud::configure_proxy':
-    proxy_trusted_proxies   => $proxy_trusted_proxies,
-    proxy_overwritehost     => $proxy_overwritehost,
-    proxy_overwriteprotocol => $proxy_overwriteprotocol,
-    require                 => Class['nextcloud'],
+  if ($proxy_trusted_proxies != undef) {
+    class { 'nextcloud::configure_proxy':
+      proxy_trusted_proxies   => $proxy_trusted_proxies,
+      proxy_overwritehost     => $proxy_overwritehost,
+      proxy_overwriteprotocol => $proxy_overwriteprotocol,
+      require                 => Class['nextcloud'],
+    }
   }
   class { 'nextcloud::configure_redis':
     redis_host => '/var/run/redis/redis.sock',
