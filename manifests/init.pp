@@ -159,8 +159,11 @@ class profile_nextcloud (
       'gd'           => {},
       'mbstring'     => {},
       'pecl-imagick' => {
-        'ensure'  => 'installed',
-        'so_name' => 'imagick'
+        'ensure'    => 'installed',
+        'so_name'   => 'imagick',
+        'setttings' => {
+          'imagick.skip_version_check' => 1
+        }
       },
       'pecl-zip'     => {
         'ensure'  => 'installed',
