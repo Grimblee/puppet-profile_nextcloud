@@ -1,3 +1,4 @@
+# installs and configures all dependencies of Nextcloud
 class profile_nextcloud (
   $servername,
   $manage_repos             = true,
@@ -10,6 +11,8 @@ class profile_nextcloud (
   $data_dir                 = '/srv/nextcloud-data',
   $create_data_dir          = true,
   $database_root_pass       = undef,
+  # wether to redirect non ssl traffic to ssl, or support access using non-ssl access
+  $redirect_ssl             = true,
   $external_db_host         = undef,
   $ldap_password            = undef,
   $ldap_base                = undef,
@@ -34,7 +37,7 @@ class profile_nextcloud (
       before => Class['Nextcloud'],
     }
     class { '::php::repo::redhat':
-      before => Class['Nextcloud'],
+      before   => Class['Nextcloud'],
       yum_repo => 'remi_php71',
     }
   }
@@ -159,9 +162,9 @@ class profile_nextcloud (
       'gd'           => {},
       'mbstring'     => {},
       'pecl-imagick' => {
-        'ensure'    => 'installed',
-        'so_name'   => 'imagick',
-        'setttings' => {
+        'ensure'   => 'installed',
+        'so_name'  => 'imagick',
+        'settings' => {
           'imagick.skip_version_check' => 1
         }
       },
@@ -188,7 +191,7 @@ class profile_nextcloud (
         'zend'     => true
       },
     },
-    settings   => {
+    settings     => {
       'PHP/max_execution_time'  => $php_max_execution_time,
       'PHP/max_input_time'      => $php_max_input_time,
       'PHP/memory_limit'        => $php_memory_limit,
@@ -239,19 +242,19 @@ class profile_nextcloud (
     ensure => present,
   }->
   class { 'nextcloud':
-    servername         => $servername,
-    local_mysql        => $local_mysql,
-    database_name      => $database_name,
-    database_user      => $database_user,
-    database_pass      => $database_pass,
-    admin_username     => $admin_username,
-    admin_pass         => $admin_pass,
-    data_dir           => $data_dir,
-    database_host      => $database_host,
-    redirect_ssl       => false,
-    trusted_domains    => [],
-    install_method     => $install_method,
-    create_data_dir    => $create_data_dir,
+    servername      => $servername,
+    local_mysql     => $local_mysql,
+    database_name   => $database_name,
+    database_user   => $database_user,
+    database_pass   => $database_pass,
+    admin_username  => $admin_username,
+    admin_pass      => $admin_pass,
+    data_dir        => $data_dir,
+    database_host   => $database_host,
+    redirect_ssl    => false,
+    trusted_domains => [],
+    install_method  => $install_method,
+    create_data_dir => $create_data_dir,
   }->
   class { 'nextcloud::configure_ldap':
     ldap_password        => $ldap_password,
@@ -271,7 +274,7 @@ class profile_nextcloud (
     require                 => Class['nextcloud'],
   }
   class { 'nextcloud::configure_redis':
-    redis_host => "/var/run/redis/redis.sock",
+    redis_host => '/var/run/redis/redis.sock',
     redis_port => 0,
     require    => Class['nextcloud'],
   }
@@ -281,13 +284,13 @@ class profile_nextcloud (
     }
   }
   firewall { '443-httpd':
-    dport  => '443',
-    action => 'accept',
+    dport   => '443',
+    action  => 'accept',
     require => Class['Firewall']
   }
   firewall { '80-httpd':
-    dport  => '80',
-    action => 'accept',
+    dport   => '80',
+    action  => 'accept',
     require => Class['Firewall']
   }
 }
