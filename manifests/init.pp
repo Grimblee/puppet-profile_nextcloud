@@ -251,7 +251,6 @@ class profile_nextcloud (
     admin_pass      => $admin_pass,
     data_dir        => $data_dir,
     database_host   => $database_host,
-    redirect_ssl    => false,
     trusted_domains => [],
     install_method  => $install_method,
     create_data_dir => $create_data_dir,
